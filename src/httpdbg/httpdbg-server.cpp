@@ -19,7 +19,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include "tunserver.hpp"
-
 #include "httpdbg/httpdbg-server.hpp"
 #include <ctime>
 
@@ -155,8 +154,8 @@ string c_httpdbg_raport::generate(string url) {
     else
         out << "</br>" << "<a href=\"/\">Back</a></th><th>";
     if(m_target.m_peer.size())
-    out << "<table><tr><th>Peering adress</th><th>Hip</th><th>Pub</th><th>Limit points</th><th>Data read</th><th>Packets read</th>"
-           "<th>Data sent</th><th>Packets sent</th><th>Connection time</th><th>Data</th><th>Packets</th></tr>";
+    out << "<table><tr><th>Peering adress</th><th>Hip</th><th>Pub</th><th>Limit points</th><th>Read data (bytes)</th><th>Read packets</th><th>Read speed (kbps)</th>"
+           "<th>Sent data (bytes)</th><th>Sent packets</th><th>Sent speed (kbps)</th><th>Connection time</th><th>Data</th><th>Packets</th></tr>";
     string data = "";
     string chart = "";
     for(auto it = m_target.m_peer.begin(); it != m_target.m_peer.end(); it++)
@@ -165,22 +164,25 @@ string c_httpdbg_raport::generate(string url) {
         if (url.size() == 32 && hip.compare(url) != 0)
             continue;
         out << "<tr><td>";
-        out << HTML(it->second->get_pip()) << "</td><td>";
-        out << it->first.get_hip_as_string(true);
+        out << HTML(it->second->get_pip());
         if(url.size()!=32)
-            out<< "</br><a href=\"" << hip << "\"> Details</a>";
-        out << "</td><td>";
-        out << HTML(it->second->get_pub()) << "</td><td>";
+            out<< "</br><a href=\"" << hip << "\" font-size='16'> Details</a>";
+        out << "</td><td class='make_bigger'>";
+        out << it->first.get_hip_as_string(true) << "</td><td>";
+        out << HTML(*(it->second->get_pub())) << "</td><td>";
         out << HTML(it->second->get_limit_points()) <<  "</td><td>";
         out << HTML(it->second->get_stats().get_size_of_read_data()) << "</td><td>";
-        out << HTML(it->second->get_stats().get_number_of_read_packets()) << "</td><td>";
+        out << HTML(it->second->get_stats().get_number_of_read_packets()) << "</td><td><b>";
+        out << HTML(it->second->get_stats().get_current_read_speed()) << "</b></td><td>";
         out << HTML(it->second->get_stats().get_size_of_sent_data()) << "</td><td>";
-        out << HTML(it->second->get_stats().get_number_of_sent_packets()) << "</td><td>";
+        out << HTML(it->second->get_stats().get_number_of_sent_packets()) << "</td><td><b>";
+        out << HTML(it->second->get_stats().get_current_sent_speed()) << "</b></td><td>";
         out << HTML(it->second->get_stats().get_connection_time()) << "</td><td>";
         out << "<div id=\"cd_div" << hip << "\" style=\"width: 150px; height: 100px;\"></div></td><td>";
         out << "<div id=\"cp_div" << hip << "\" style=\"width: 150px; height: 100px;\"></div></td></tr>";
         data += it->second->get_stats().get_data_buffer().get_data_buffer_as_js_str(hip);
         data += it->second->get_stats().get_data_buffer().get_packets_buffer_as_js_str(hip);
+        data += it->second->get_stats().get_data_buffer().get_speed_as_js_str(hip);
         chart += it->second->get_stats().get_data_buffer().get_charts_as_js_str(hip, url.size()==32);
     }
     out << "</table></br>";
@@ -196,7 +198,7 @@ string c_httpdbg_raport::generate(string url) {
         if (url.size() == 32 && hip.compare(url) != 0)
             continue;
 
-        out << "<tr><td>";
+        out << "<tr><td class='make_bigger'>";
         out << it->first.get_hip_as_string(true) << "</td><td>";
         out << HTML(it->second->debug_this()) << "</td><td>";
         try
@@ -215,16 +217,16 @@ string c_httpdbg_raport::generate(string url) {
         }
         if(it->second->m_stream_crypto_ab != NULL)
         {
-            out << HTML(it->second->m_stream_crypto_ab->debug_this()) << "</td><td>";
-            out << HTML(it->second->m_stream_crypto_ab->m_boxer->get_nonce()) << "</td><td>";
+            out << HTML(it->second->m_stream_crypto_ab->debug_this()) << "</td><td class='make_bigger'>";
+            out << HTML(it->second->m_stream_crypto_ab->m_boxer->get_nonce()) << "</td><td class='make_bigger'>";
             out << HTML(it->second->m_stream_crypto_ab->m_unboxer->get_nonce()) << "</td><td>";
         }
         else
             out << "n/a</td><td>n/a</td><td>n/a</td><td>";
         if(it->second->m_stream_crypto_final != NULL)
         {
-            out << HTML(it->second->m_stream_crypto_final->debug_this()) << "</td><td>";
-            out << HTML(it->second->m_stream_crypto_final->m_boxer->get_nonce()) << "</td><td>";
+            out << HTML(it->second->m_stream_crypto_final->debug_this()) << "</td><td class='make_bigger'>";
+            out << HTML(it->second->m_stream_crypto_final->m_boxer->get_nonce()) << "</td><td class='make_bigger'>";
             out << HTML(it->second->m_stream_crypto_final->m_unboxer->get_nonce()) << "</td><td>";
         }
         else
@@ -236,6 +238,7 @@ string c_httpdbg_raport::generate(string url) {
     {
         out << "<div id=\"bcd_div" << url << "\" style=\"width: 50%; height: 500px; float: left;\"></div>";
         out << "<div id=\"bcp_div" << url << "\" style=\"width: 50%; height: 500px; float: left;\"></div>";
+        out << "<div id=\"bcs_div" << url << "\" style=\"width: 50%; height: 500px; float: left;\"></div>";
     }
     boost::format page = boost::format(page_template) % data % chart % out.str();
     return page.str();

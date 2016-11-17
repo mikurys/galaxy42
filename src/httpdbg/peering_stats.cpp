@@ -50,13 +50,33 @@ void c_data_tramsmission_buffer::update_read_buffer(size_t data_size){
     }
 }
 
+double c_data_tramsmission_buffer::get_current_sent_speed() const{
+    return m_data_sent_buffer[m_data_sent_buffer.size()-2] * 8. / 1024.;
+}
+
+double c_data_tramsmission_buffer::get_current_read_speed() const{
+    return m_data_read_buffer[m_data_read_buffer.size()-2] * 8. / 1024.;
+}
+
 string c_data_tramsmission_buffer::get_data_buffer_as_js_str(string var){
     ostringstream out;
     update_read_buffer(0);
     update_sent_buffer(0);
     out << " var d" << var << " = google.visualization.arrayToDataTable([['Seconds', 'Read data', 'Sent data'],";
     for(unsigned i=0; i<m_data_read_buffer.size(); i++)
-        out << "['" << i << "', " << m_data_read_buffer[i] << ", " << m_data_sent_buffer[i] << "],";
+        out << "['" << static_cast<int>(i)-static_cast<int>(m_data_read_buffer.size())+1 << "', " << m_data_read_buffer[i] << ", " << m_data_sent_buffer[i] << "],";
+    string str = out.str();
+    str[str.size()-1] = ' ';
+    return str + "]);";
+}
+
+string c_data_tramsmission_buffer::get_speed_as_js_str(string var){
+    ostringstream out;
+    update_read_buffer(0);
+    update_sent_buffer(0);
+    out << " var s" << var << " = google.visualization.arrayToDataTable([['Seconds', 'Read speed', 'Sent speed'],";
+    for(unsigned i=0; i<m_data_read_buffer.size(); i++)
+        out << "['" << static_cast<int>(i)-static_cast<int>(m_data_read_buffer.size())+1 << "', " << m_data_read_buffer[i] * 8. / 1024. << ", " << m_data_sent_buffer[i] * 8. / 1024. << "],";
     string str = out.str();
     str[str.size()-1] = ' ';
     return str + "]);";
@@ -67,8 +87,8 @@ string c_data_tramsmission_buffer::get_packets_buffer_as_js_str(string var){
     update_read_buffer(0);
     update_sent_buffer(0);
     out << " var p" << var << " = google.visualization.arrayToDataTable([['Seconds', 'Read packets', 'Sent packets'],";
-    for(unsigned i=0; i<m_data_read_buffer.size(); i++)
-        out << "['" << i << "', " << m_packets_read_buffer[i] << ", " << m_packets_sent_buffer[i] << "],";
+    for(unsigned i=0; i<m_packets_read_buffer.size(); i++)
+        out << "['" << static_cast<int>(i)-static_cast<int>(m_packets_read_buffer.size())+1 << "', " << m_packets_read_buffer[i] << ", " << m_packets_sent_buffer[i] << "],";
     string str = out.str();
     str[str.size()-1] = ' ';
     return str + "]);";
@@ -86,6 +106,8 @@ string c_data_tramsmission_buffer::get_charts_as_js_str(string var, bool display
         out << "bcd" << var << ".draw(d" << var << ", data_options_big);";
         out << "var bcp" << var << " = new google.visualization.AreaChart(document.getElementById('bcp_div" << var <<"'));";
         out << "bcp" << var << ".draw(p" << var << ", packets_options_big);";
+        out << "var bcs" << var << " = new google.visualization.AreaChart(document.getElementById('bcs_div" << var <<"'));";
+        out << "bcs" << var << ".draw(s" << var << ", speed_options_big);";
     }
     return out.str();
 }
@@ -117,6 +139,14 @@ size_t c_peering_stats::get_size_of_sent_data() const{
 
 size_t c_peering_stats::get_size_of_read_data() const{
     return m_size_of_read_data;
+}
+
+double c_peering_stats::get_current_sent_speed() const{
+    return m_data_buffer.get_current_sent_speed();
+}
+
+double c_peering_stats::get_current_read_speed() const{
+    return m_data_buffer.get_current_read_speed();
 }
 
 long c_peering_stats::get_number_of_sent_packets() const{

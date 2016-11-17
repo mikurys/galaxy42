@@ -10,6 +10,14 @@ Content-Type: text/html; charset=UTF-8
             table, th, td {
                 border: 1px solid black; font-size:	16px; text-align: center;
             }
+
+            .make_bigger {
+                font-size: 8px;
+            }
+
+.make_bigger:hover{
+  font-size: 16px;
+}
         </style>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
@@ -19,15 +27,21 @@ Content-Type: text/html; charset=UTF-8
                 %s
 
                 var data_options_big = {
-                    title: 'Data',
+                    title: 'Data (last 2 minutes)',
+                    hAxis: {title: 'Seconds', titleTextStyle: {color: '#333'}},
+                    vAxis: {title: 'Bytes', minValue: 0, viewWindow:{min:0}}
+                };
+
+                var packets_options_big = {
+                    title: 'Packets (last 2 minutes)',
                     hAxis: {title: 'Seconds', titleTextStyle: {color: '#333'}},
                     vAxis: {minValue: 0, viewWindow:{min:0}}
                 };
 
-                var packets_options_big = {
-                    title: 'Packets',
+                var speed_options_big = {
+                    title: 'Speed (last 2 minutes)',
                     hAxis: {title: 'Seconds', titleTextStyle: {color: '#333'}},
-                    vAxis: {minValue: 0, viewWindow:{min:0}}
+                    vAxis: {title: 'kbps', minValue: 0, viewWindow:{min:0}}
                 };
 
                 var data_options = {series: [{visibleInLegend: false},{visibleInLegend: false}],

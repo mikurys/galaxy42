@@ -57,7 +57,9 @@ it has bugs and 'typpos'.
 
 #include "crypto_basic.hpp"
 #include "multikeys.hpp"
+#ifdef HTTP_DBG
 #include "httpdbg/httpdbg-server.hpp"
+#endif
 
 /**
  * @defgroup antinet_crypto Antinet Crypto

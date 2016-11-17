@@ -12,7 +12,10 @@ class c_data_tramsmission_buffer{
         c_data_tramsmission_buffer(int buffer_size, int interval_in_milisec);
         void update_sent_buffer(std::size_t data_size);
         void update_read_buffer(std::size_t data_size);
+        double get_current_sent_speed() const;
+        double get_current_read_speed() const;
         std::string get_data_buffer_as_js_str(std::string var);
+        std::string get_speed_as_js_str(std::string var);
         std::string get_packets_buffer_as_js_str(std::string var);
         std::string get_charts_as_js_str(std::string var, bool display_big_chart);
 
@@ -34,6 +37,8 @@ class c_peering_stats{
         void update_read_stats(std::size_t size_of_read_data);
         std::size_t get_size_of_sent_data() const;
         std::size_t get_size_of_read_data() const;
+        double get_current_sent_speed() const;
+        double get_current_read_speed() const;
         long get_number_of_sent_packets() const;
         long get_number_of_read_packets() const;
         std::string get_connection_time() const;
