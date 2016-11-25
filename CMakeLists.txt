@@ -22,11 +22,7 @@ if(BUILD_STATIC_TUNSERVER)
 endif()
 
 if(MINGW)
-	if(CYGWIN)
-		add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-	else()
-		add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-	endif()
+	add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
 endif()
 
 #-----------------------------------------------------------------------------
@@ -87,10 +83,10 @@ message(STATUS "C++ link flags:  ${CMAKE_CXX_LINK_FLAGS}")
 
 
 
-set (Boost_DEBUG OFF)
+set (Boost_DEBUG ON)
 if (CYGWIN)
 	set(BOOST_LOCALE_LINK_LIB boost_locale-mt boost_thread-mt boost_atomic-mt)
-	set(BOOST_THREAD_LINK_LIB boost_thread-mt boost_atomic-mt)
+	set(BOOST_THREAD_LINK_LIB boost_filesystem-mt boost_thread-mt boost_atomic-mt)
 else()
 	set(BOOST_LOCALE_LIB_SEARCH locale)
 	set(BOOST_THREAD_LIB_SEARCH thread atomic)
