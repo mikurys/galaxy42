@@ -4,8 +4,9 @@
 
 #include "trivialserialize.hpp"
 
-#include "strings_utils.hpp"
+#include "glor/system/ostream_operator.hpp"
 
+#include "strings_utils.hpp"
 
 using namespace std;
 
@@ -304,27 +305,6 @@ namespace detail {
 }
 
 
-template <typename T> ostream& operator<<(ostream &ostr , const vector<T> & tab) {
-	bool first=0; // first was done yet
-	for (const auto & obj : tab) {
-		if (first) ostr << ", ";
-		first=1;
-		ostr<<obj;
-	}
-	return ostr;
-}
-
-template <typename TKey, typename TVal> ostream& operator<<(ostream &ostr , const map<TKey,TVal> & tab) {
-	bool first=0; // first was done yet
-	for (const auto & it : tab) {
-		if (first) ostr << ", ";
-		first=1;
-		ostr << (it.first) << ": {" << (it.second) << "}";
-	}
-	return ostr;
-}
-
-
 namespace test {
 
 
@@ -493,6 +473,12 @@ void test_trivialserialize(std::ostream &dbgout) {
 
 	auto tanks = parser.pop_vector_object<c_tank>();
 
+	{
+		std::ostringstream oss;
+		c_tank one_tank;
+		oss<<one_tank;
+		oss<<tanks;
+	}
 	_info("Vector tank: " << tanks);
 	for(auto & t : tanks) _info(t);
 	if ( tanks == get_example_tanks()) {	_info("Container deserialized correctly"); }

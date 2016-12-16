@@ -4,14 +4,20 @@
 #ifndef C_TNETDBG_HPP
 #define C_TNETDBG_HPP
 
+#include "glor/system/utils.hpp"
+
+
+
 #include <boost/locale.hpp>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <string>
 
-extern unsigned char g_dbg_level;
+#include "glor/system/ostream_operator.hpp"
 
+
+extern unsigned char g_dbg_level;
 
 /// This macros will be moved later to glorious-cpp library or other
 
@@ -20,6 +26,8 @@ const char * debug_shorten__FILE__(const char * name);
 void g_dbg_level_set(unsigned char level, std::string why, bool quiet=false);
 
 #define _my__FILE__ (debug_shorten__FILE__(__FILE__))
+
+#if 0 // ------------ removing old tnet debug, use lib glorious
 
 #define SHOW_DEBUG
 #ifdef SHOW_DEBUG
@@ -74,6 +82,8 @@ void g_dbg_level_set(unsigned char level, std::string why, bool quiet=false);
 #define _mark(X) do {} while(0)
 
 #endif
+
+#endif // ------------ removing old tnet debug, use lib glorious
 
 // TODO this is not really "debug", move to other file
 #define _UNUSED(x) (void)(x)
@@ -167,4 +177,5 @@ std::string debug_this();
 std::string to_string(const std::wstring &input); // TODO
 
 #endif // include guard
+
 
