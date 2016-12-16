@@ -4,15 +4,16 @@
 #ifndef C_TNETDBG_HPP
 #define C_TNETDBG_HPP
 
-
+#include "glor/system/utils.hpp"
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include "mo_reader.hpp"
 
-extern unsigned char g_dbg_level;
+#include "glor/system/ostream_operator.hpp"
 
+extern unsigned char g_dbg_level;
 
 /// This macros will be moved later to glorious-cpp library or other
 
@@ -22,9 +23,10 @@ void g_dbg_level_set(unsigned char level, std::string why, bool quiet=false);
 
 #define _my__FILE__ (debug_shorten__FILE__(__FILE__))
 
+#if 0 // ------------ removing old tnet debug, use lib glorious
+
 #define SHOW_DEBUG
 #ifdef SHOW_DEBUG
-
 
 extern const bool g_is_windows_console;
 
@@ -51,7 +53,7 @@ void write_to_console(const std::string& obj);
 #define _fact(X) _fact_level(100, 30, X)
 #define _goal(X) _fact_level(150, 30, X)
 /// yellow code
-//        ::std::cerr<<"Warn! " << _my__FILE__ << ':' << __LINE__ << " " << X << "\033[0m" << ::std::endl; 
+//        ::std::cerr<<"Warn! " << _my__FILE__ << ':' << __LINE__ << " " << X << "\033[0m" << ::std::endl;
 
 #define _warn(X) do { DBGLVL(100); \
 	std::ostringstream oss; \
@@ -60,7 +62,7 @@ void write_to_console(const std::string& obj);
 	write_to_console(oss.str());\
 } while(0)
 /// red code
-//        ::std::cerr<<"ERROR! " << _my__FILE__ << ':' << __LINE__ << " " << X << ::std::endl; 
+//        ::std::cerr<<"ERROR! " << _my__FILE__ << ':' << __LINE__ << " " << X << ::std::endl;
 
 #define _erro(X) do { DBGLVL(200); \
 	std::ostringstream oss; \
@@ -92,6 +94,8 @@ void write_to_console(const std::string& obj);
 
 #endif
 
+#endif // ------------ removing old tnet debug, use lib glorious
+
 // TODO this is not really "debug", move to other file
 #define _UNUSED(x) (void)(x)
 
@@ -100,7 +104,6 @@ void write_to_console(const std::string& obj);
 
 #define _NOTREADY_warn() do { _warn("This code is not implemented yet! in "<<__FUNCTION__);\
 	} while(0)
-
 
 // this assert is probably not important, rather only in debug
 #define _obvious(X) do { if (!(X)) { _erro("Assertation failed (_obvious) at " << _my__FILE__ << ':' << __LINE__); ::std::abort(); } } while(0)
@@ -113,7 +116,6 @@ void write_to_console(const std::string& obj);
 
 // this assert MUST BE checked in release too
 #define _check(X) do { if (!(X)) { _erro("Assertation failed (_assert) at " << _my__FILE__ << ':' << __LINE__); ::std::abort(); }  } while(0)
-
 
 //        _warn("Going to throw exception. What: " << except_var.what()
 #define _throw_error_2( EXCEPT , MSG ) do { auto except_var = EXCEPT;  \
@@ -148,8 +150,6 @@ void must_be_exception_type_error_exit(const ui::exception_error_exit &x);
 		}\
 	} while(0)
 
-
-
 #define UI_EXECUTE_OR_EXIT( FUNC ) \
 				try { \
 					try { \
@@ -159,9 +159,6 @@ void must_be_exception_type_error_exit(const ui::exception_error_exit &x);
 					std::cout << "Error occured (see above) - we will exit now" << std::endl; \
 					_throw_exit( ui::exception_error_exit("Error in: " # FUNC ) ); \
 				}
-
-
-
 
 /** TODO document
 throw std::logic_error("foo");
@@ -184,4 +181,3 @@ std::string debug_this();
 std::string to_string(const std::wstring &input); // TODO
 
 #endif // include guard
-
