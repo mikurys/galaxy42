@@ -22,3 +22,7 @@
 	path = depends/json
 	url = https://github.com/nlohmann/json
 	branch = develop
+[submodule "depends/gloriouscpp"]
+	path = depends/gloriouscpp
+	url = https://github.com/mikurys/gloriouscpp.git
+	branch = dev
