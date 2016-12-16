@@ -311,13 +311,6 @@ template <> c_tank obj_deserialize<c_tank>(trivialserialize::parser & parser) {
 
 namespace test {
 
-namespace detail {
-
-} // namespace detail
-}
-
-namespace test {
-
 void test_shortstring_end(std::ostream &dbgout) {
 	trivialserialize::generator gen(50);
 
@@ -339,7 +332,6 @@ void test_shortstring_end(std::ostream &dbgout) {
 }
 
 void test_trivialserialize(std::ostream &dbgout) {
-	using namespace detail;
 
 	test_shortstring_end(dbgout);
 
@@ -480,14 +472,20 @@ void test_trivialserialize(std::ostream &dbgout) {
 		dbgout<<"vector string decoded: [" << val_given << "] with size=" << val_given.size() << endl;
 	}
 
+	using ::operator<<; // TODONOW TODO
 	auto tanks = parser.pop_vector_object<c_tank>();
 
 	{
 		std::ostringstream oss;
+
 		c_tank one_tank;
-		oss<<one_tank;
-		oss<<tanks;
+
+		::std::cout << one_tank;
+
+		::std::cout << tanks;
+
 	}
+
 	_info("Vector tank: " << tanks);
 	for(auto & t : tanks) _info(t);
 	if ( tanks == get_example_tanks()) {	_info("Container deserialized correctly"); }
@@ -509,6 +507,5 @@ void test_trivialserialize(std::ostream &dbgout) {
 }
 
 } // namespace
->>>>>>> Connecting glorious debug [bad]
 
 } // namespace
