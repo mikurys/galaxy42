@@ -894,6 +894,7 @@ void c_tunserver::event_loop(int time) {
 	char buf[buf_size];
 
 	bool anything_happened=false; // in given loop iteration, for e.g. debug
+	_UNUSED(anything_happened);
 
 	bool was_connected=true;
 	{

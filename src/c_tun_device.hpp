@@ -13,7 +13,6 @@
 
 std::string errno_to_string(int errno_copy); ///< Convert errno from C-lib into a string. Thread-safe function.
 
-
 class tuntap_error : public runtime_error_subtype {};
 class tuntap_error_devtun : public tuntap_error {};
 class tuntap_error_ip     : public tuntap_error {};

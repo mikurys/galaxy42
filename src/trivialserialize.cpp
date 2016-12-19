@@ -466,20 +466,7 @@ void test_trivialserialize(std::ostream &dbgout) {
 		dbgout<<"vector string decoded: [" << val_given << "] with size=" << val_given.size() << endl;
 	}
 
-	using ::operator<<; // TODONOW TODO
 	auto tanks = parser.pop_vector_object<c_tank>();
-
-	{
-		std::ostringstream oss;
-
-		c_tank one_tank;
-
-		::std::cout << one_tank;
-
-		::std::cout << tanks;
-
-	}
-
 	_info("Vector tank: " << tanks);
 	for(auto & t : tanks) _info(t);
 	if ( tanks == get_example_tanks()) {	_info("Container deserialized correctly"); }
