@@ -78,7 +78,6 @@ if (BUILD_STATIC_TUNSERVER)
 	set (sodium_USE_STATIC_LIBS ON)
 endif()
 
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfatal-errors")
 
 message(STATUS "C++ Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
@@ -243,6 +242,37 @@ if(EXTLEVEL_IS_EXPERIMENT) # {{match_extlevel_ntru}}
 	option(ENABLE_CRYPTO_NTRU TXT_NTRU ON)
 else()
 	option(ENABLE_CRYPTO_NTRU TXT_NTRU OFF)
+endif()
+
+if(NOT MINGW AND NOT WIN32)
+add_custom_target(run
+		COMMAND ./tunserver.sh
+		DEPENDS ./tunserver.elf
+		DEPENDS test-debug.elf
+		WORKING_DIRECTORY ./)
+
+add_custom_target(runcli
+		COMMAND ./ipclient.elf ::1 12006 ipv6 1200
+		DEPENDS ./ipclient.elf
+		WORKING_DIRECTORY ./)
+
+add_custom_command(
+	TARGET ipclient.elf ipserver.elf tunserver.elf
+	POST_BUILD
+#	COMMAND chmod g-wx,o-wx ipclient.elf
+#	COMMAND chmod g-wx,o-wx ipserver.elf
+	COMMAND chmod g-wx,o-wx tunserver.elf
+	COMMAND cp tunserver.elf nocap-tunserver.elf
+	WORKING_DIRECTORY ./)
+
+add_custom_command(
+	TARGET ipclient.elf ipserver.elf tunserver.elf
+	POST_BUILD
+	COMMAND share/script/use-setcap tunserver.elf || echo "Can not set rights on binary, ignoring."
+	COMMAND share/script/show-source-help.sh
+	COMMAND share/script/show-program-help.sh
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 endif()
 
 #add local gtest
@@ -474,36 +504,5 @@ message(STATUS "C++ link flags:  ${CMAKE_CXX_LINK_FLAGS}")
 # ^-- if using this, then SORT it.
 #add_executable(rpc_sender ${SOURCES_GROUP_RPC} ../antinet/src/antinet_sim/c_tnetdbg.cpp)
 #target_link_libraries(rpc_sender boost_system pthread)
-
-if(NOT MINGW AND NOT WIN32)
-add_custom_target(run
-		COMMAND ./tunserver.sh
-		DEPENDS ./tunserver.elf
-		DEPENDS test-debug.elf
-		WORKING_DIRECTORY ./)
-
-add_custom_target(runcli
-		COMMAND ./ipclient.elf ::1 12006 ipv6 1200
-		DEPENDS ./ipclient.elf
-		WORKING_DIRECTORY ./)
-
-add_custom_command(
-	TARGET ipclient.elf ipserver.elf tunserver.elf
-	POST_BUILD
-#	COMMAND chmod g-wx,o-wx ipclient.elf
-#	COMMAND chmod g-wx,o-wx ipserver.elf
-	COMMAND chmod g-wx,o-wx tunserver.elf
-	COMMAND cp tunserver.elf nocap-tunserver.elf
-	WORKING_DIRECTORY ./)
-
-add_custom_command(
-	TARGET ipclient.elf ipserver.elf tunserver.elf
-	POST_BUILD
-	COMMAND share/script/use-setcap tunserver.elf || echo "Can not set rights on binary, ignoring."
-	COMMAND share/script/show-source-help.sh
-	COMMAND share/script/show-program-help.sh
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
-
-endif()
 
 # unset( USE_BOOST_MULTIPRECISION_DEFAULT )
