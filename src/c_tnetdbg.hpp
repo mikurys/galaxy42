@@ -11,7 +11,8 @@
 #include <string>
 #include "mo_reader.hpp"
 
-#include "glor/system/ostream_operator.hpp"
+#include <glor/system/ostream_operator.hpp>
+
 
 extern unsigned char g_dbg_level;
 
