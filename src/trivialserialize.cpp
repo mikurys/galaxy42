@@ -4,7 +4,7 @@
 
 #include "trivialserialize.hpp"
 
-#include "glor/system/ostream_operator.hpp"
+#include <glor/system/ostream_operator.hpp>
 
 #include "strings_utils.hpp"
 
@@ -467,7 +467,7 @@ void test_trivialserialize(std::ostream &dbgout) {
 	}
 
 	auto tanks = parser.pop_vector_object<c_tank>();
-	_info("Vector tank: " << tanks);
+	//_info("Vector tank: " << tanks);
 	for(auto & t : tanks) _info(t);
 	if ( tanks == get_example_tanks()) {	_info("Container deserialized correctly"); }
 		else _throw_error( std::runtime_error("Deserialization failed") );
@@ -475,15 +475,15 @@ void test_trivialserialize(std::ostream &dbgout) {
 	auto tanks_location = parser.pop_map_object<string, c_tank>();
 	if ( tanks_location == get_example_tanks_map_location()) {	_info("Container deserialized correctly"); }
 		else _throw_error( std::runtime_error("Deserialization failed") );
-	_info("Map tank: " << tanks_location);
+	//_info("Map tank: " << tanks_location);
 
 	auto tanks_captain = parser.pop_map_object<c_tank,string>();
 	if ( tanks_captain == get_example_tanks_map_captain()) {	_info("Container deserialized correctly"); }
 		else _throw_error( std::runtime_error("Deserialization failed") );
-	_info("Map tank: " << tanks_captain);
+	//_info("Map tank: " << tanks_captain);
 
 	auto output = parser.pop_map_object<std::string, std::string>();
-	_info("Output: " << output);
+	//_info("Output: " << output);
 
 }
 

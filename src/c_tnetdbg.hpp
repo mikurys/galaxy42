@@ -4,7 +4,7 @@
 #ifndef C_TNETDBG_HPP
 #define C_TNETDBG_HPP
 
-#include "glor/system/utils.hpp"
+#include <glor/system/utils.hpp>
 
 
 
@@ -14,7 +14,7 @@
 #include <sstream>
 #include <string>
 
-#include "glor/system/ostream_operator.hpp"
+#include <glor/system/ostream_operator.hpp>
 
 
 extern unsigned char g_dbg_level;
