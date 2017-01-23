@@ -109,7 +109,6 @@ static t_syserr checkInterfaceUp(int socket,
         return (t_syserr){ 0 , 0 }; // all ok
     }
 
-
     ifRequest->ifr_flags |= IFF_UP | IFF_RUNNING;
     if (ioctl(socket, SIOCSIFFLAGS, ifRequest) < 0) {
 	    	err = errno;
@@ -158,7 +157,6 @@ t_syserr NetPlatform_addAddress(const char* interfaceName,
             close(s);
             return (t_syserr){ e_netplatform_err_ioctl, err };
         }
-
 
     } else if (addrFam == Sockaddr_AF_INET) {
 			printf("setting ipv4 address\n");
