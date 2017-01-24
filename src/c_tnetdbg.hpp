@@ -26,7 +26,7 @@ void g_dbg_level_set(unsigned char level, std::string why, bool quiet=false);
 
 #if 0 // ------------ removing old tnet debug, use lib glorious
 
-#define SHOW_DEBUG
+//#define SHOW_DEBUG
 #ifdef SHOW_DEBUG
 
 extern const bool g_is_windows_console;

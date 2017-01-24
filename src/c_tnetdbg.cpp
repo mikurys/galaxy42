@@ -6,7 +6,7 @@
 #include <cstring>
 
 unsigned char g_dbg_level = 100; // (extern)
-
+/*
 #if defined(_WIN32) || defined(__CYGWIN__)
 #include <windows.h>
 //#include <winbase.h>
@@ -65,7 +65,7 @@ void write_to_console(const std::string& obj) {
 	else
 		::std::cerr << obj;
 }
-
+*/
 void g_dbg_level_set(unsigned char level, std::string why, bool quiet) {
 	bool more_debug = level < g_dbg_level;
 	if ( more_debug) g_dbg_level = level; // increase before printing
