@@ -8,6 +8,7 @@
 
 class c_transport_email_obj : public c_transport_base_obj {
 	public:
+		c_transport_email_obj(c_transport_email_addr addr);
 		virtual ~c_transport_email_obj();
 		virtual void send_to(const c_transport_base_addr & dest, const unsigned char *data, size_t size) override;
 

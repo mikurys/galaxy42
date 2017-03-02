@@ -28,6 +28,8 @@
 #include "transport/base/transp_base_obj.hpp"
 #include "transport/simulation/transp_simul_addr.hpp"
 #include "transport/simulation/transp_simul_obj.hpp"
+#include "transport/email/transp_email_addr.hpp"
+#include "transport/email/transp_email_obj.hpp"
 
 // ============================================================================
 
@@ -308,7 +310,9 @@ int c_the_program_newloop::main_execution() {
 	auto world = make_shared<c_world>();
 
 	unique_ptr<c_transport_base_obj> transp = make_unique<c_transport_simul_obj>( world );
+	unique_ptr<c_transport_base_obj> transp_email = make_unique<c_transport_email_obj>("my_addr@test.com"s);
 	unique_ptr<c_transport_base_addr> peer_addr = make_unique<c_transport_simul_addr>( world->generate_simul_transport() );
+	unique_ptr<c_transport_base_addr> peer_addr_email = make_unique<c_transport_email_addr>( "peer@test.com" );
 
 	// m_pimpl->tunserver = make_unique< c_tunserver2 >();
 
@@ -333,6 +337,7 @@ int c_the_program_newloop::main_execution() {
 			_dbg3( to_debug( std::string(buf.data() , buf.data()+read) , e_debug_style_buf ) );
 			crypto.cryptobox_encrypt(chunk.data(), read, nonce, crypto.get_my_public_key());
 			UsePtr(transp).send_to( UsePtr(peer_addr) , chunk.data() , chunk.size() );
+			UsePtr(transp_email).send_to( UsePtr(peer_addr_email) , chunk.data() , chunk.size() );
 		}
 	}
 

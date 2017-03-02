@@ -4,6 +4,9 @@
 
 #include "libs1.hpp"
 
+c_transport_email_obj::c_transport_email_obj(c_transport_email_addr addr) : m_addr(addr){
+}
+
 c_transport_email_obj::~c_transport_email_obj() {
 }
 
