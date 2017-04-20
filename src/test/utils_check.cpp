@@ -279,3 +279,47 @@ TEST(utils_check, try_cached_as_check_what_message_test) {
 	}
 
 }
+
+TEST(resonable_test, resonable_size_test) {
+	{
+		std::vector<char> vec(reasonable_size_limit_bytes_divided_max + 1);
+		EXPECT_THROW(reasonable_size(vec), err_check_input);
+		vec = std::vector<char>(reasonable_size_limit_elements_divided_max);
+		EXPECT_NO_THROW(reasonable_size(vec));
+		vec = std::vector<char>(reasonable_size_limit_bytes_divided_max - 1);
+		EXPECT_NO_THROW(reasonable_size(vec));
+	}
+	{
+		std::string str(reasonable_size_limit_bytes_divided_max + 1, 'a');
+		EXPECT_THROW(reasonable_size(str), err_check_input);
+		str = std::string(reasonable_size_limit_bytes_divided_max, 'a');
+		EXPECT_NO_THROW(reasonable_size(str));
+		str = std::string(reasonable_size_limit_bytes_divided_max - 1, 'a');
+		EXPECT_NO_THROW(reasonable_size(str));
+	}
+
+	{
+		const std::vector<char> const_vec(reasonable_size_limit_bytes_divided_max + 1);
+		EXPECT_THROW(reasonable_size(const_vec), err_check_input);
+	}
+	{
+		const std::vector<char> const_vec(reasonable_size_limit_bytes_divided_max);
+		EXPECT_NO_THROW(reasonable_size(const_vec));
+	}
+	{
+		const std::vector<char> const_vec(reasonable_size_limit_bytes_divided_max - 1);
+		EXPECT_NO_THROW(reasonable_size(const_vec));
+	}
+	{
+		const std::string const_str(reasonable_size_limit_bytes_divided_max + 1, 'a');
+		EXPECT_THROW(reasonable_size(const_str), err_check_input);
+	}
+	{
+		const std::string const_str(reasonable_size_limit_bytes_divided_max, 'a');
+		EXPECT_NO_THROW(reasonable_size(const_str));
+	}
+	{
+		const std::string const_str(reasonable_size_limit_bytes_divided_max - 1, 'a');
+		EXPECT_NO_THROW(reasonable_size(const_str));
+	}
+}

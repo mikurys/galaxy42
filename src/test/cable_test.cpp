@@ -4,6 +4,7 @@
 #include <cable/simulation/cable_simul_addr.hpp>
 #include <cable/simulation/world.hpp>
 #include <cable/udp/cable_udp_addr.hpp>
+#include <cable/udp/cable_udp_obj.hpp>
 #include <cable/asio_ioservice_manager.hpp>
 #include <iostream>
 
@@ -39,7 +40,7 @@ TEST(cable_Test, operators_test) {
 	EXPECT_LT(UsePtr(shm_addr1), UsePtr(shm_addr3));
 }
 
-TEST(c_asioservice_menager_test, resize_to_at_least_test)
+TEST(c_asioservice_manager_test, resize_to_at_least_test)
 {
 	size_t size = 1;
 	c_asioservice_manager manager(size);
@@ -66,4 +67,20 @@ TEST(c_asioservice_menager_test, resize_to_at_least_test)
 	manager.resize_to_at_least(size);
 	EXPECT_EQ(manager.size(), size);
 	EXPECT_THROW(manager.resize_to_at_least(manager.capacity()+1), err_check_prog);
+}
+
+TEST(c_asioservice_manager_test, stop_all_threadsafe_test) {
+	/*
+	size_t size=5;
+	shared_ptr<c_asioservice_manager> manager = make_shared<c_asioservice_manager>(size);
+	c_cable_udp cable1(manager);
+	c_cable_udp cable2(manager);
+	c_cable_udp cable3(manager);
+	auto udp_addr1 = c_cable_base_addr::cable_make_addr("udp:192.166.218.58:9042");
+	size_t buff_size = 9000;
+	unsigned char buff[buff_size];
+	std::thread t1([&](){cable1.receive_from(udp_addr1,buff, buff_size );});
+	manager->stop_all();
+	t1.join();
+	*/
 }

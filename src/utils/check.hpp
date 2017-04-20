@@ -217,7 +217,7 @@ void reasonable_size(const std::string & obj); ///< will throw if string is unre
 template<typename T> void reasonable_size(const T & obj) { ///< will throw if this some container is too big, see #reasonable
 	const size_t elements = obj.size();
 	if (! (elements < reasonable_size_limit_elements_divided_warn) ) {
-		_warn("Object @"<<static_cast<void*>(&obj)<<" starts to get too big: elemens="<<elements);
+		_warn("Object @"<<static_cast<const void*>(&obj)<<" starts to get too big: elemens="<<elements);
 	}
 	_check_input(elements <= reasonable_size_limit_elements_divided_max);
 
