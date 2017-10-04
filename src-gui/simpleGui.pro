@@ -44,7 +44,6 @@ SOURCES += \
     commandsender.cpp \
     nodecontrolerdialog.cpp
 
-
 HEADERS += \
     mainwindow.hpp \
     addressdialog.hpp \
@@ -87,7 +86,6 @@ FORMS += \
         addpeerdialog.ui \
     nodecontrolerdialog.ui
 
-
 debug {
 	DESTDIR = build/debug
 }
@@ -95,7 +93,6 @@ debug {
 release {
 	DESTDIR = build/release
 }
-
 
 test {
     message(Test build)
@@ -115,8 +112,8 @@ test {
     message(Normal build)
 }
 
-
 win32: LIBS += -L$$PWD/../../repo/libsodium-win32/lib/ -lsodium
+linux: LIBS += -lsodium
 
 INCLUDEPATH += $$PWD/../../repo/libsodium-win32/include
 DEPENDPATH += $$PWD/../../repo/libsodium-win32/include
